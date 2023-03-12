@@ -1,0 +1,120 @@
+export const locationsSort1 = [
+    {
+    listName:'基隆站點清單',
+    stations:[{name:'基隆',index:0}]
+    },
+    {
+    listName:'新北站點清單',
+    stations:[
+            {name:'汐止',index:1},
+            {name:'萬里',index:2},
+            {name:'新店',index:3},
+            {name:'土城',index:4},
+            {name:'板橋',index:5},
+            {name:'新莊',index:6},
+            {name:'菜寮',index:7},
+            {name:'林口',index:8},
+            {name:'淡水',index:9},
+            {name:'三重',index:65},
+            {name:'樹林',index:83},
+            {name:'永和',index:68},
+            {name:'富貴角',index:76}
+            ]
+    },
+    {
+    listName:'台北站點清單',
+    stations:[
+            {name:'士林',index:10},
+            {name:'中山',index:11},
+            {name:'萬華',index:12},
+            {name:'古亭',index:13},
+            {name:'松山',index:14},
+            {name:'大同',index:15},
+            {name:'陽明',index:62}
+            ]
+    },
+    {
+    listName:'桃園站點清單',
+    stations:[
+            {name:'桃園',index:16},
+            {name:'大園',index:17},
+            {name:'觀音',index:18},
+            {name:'平鎮',index:19},
+            {name:'龍潭',index:20},
+            {name:'中壢',index:66},
+            {name:'三民',index:82}
+            ]
+    },
+    {
+    listName:'新竹站點清單',
+    stations:[
+            {name:'湖口',index:21},
+            {name:'竹東',index:22},
+            {name:'新竹',index:23}
+            ]
+    },
+    {
+    listName:'苗栗站點清單',
+    stations:[
+            {name:'頭份',index:24},
+            {name:'苗栗',index:25},
+            {name:'三義',index:26}
+            ]
+    },
+    {
+    listName:'台中站點清單',
+    stations:[
+            {name:'豐原',index:27},
+            {name:'沙鹿',index:28},
+            {name:'大里',index:29},
+            {name:'忠明',index:30},
+            {name:'西屯',index:31}
+            ]
+    },
+    {
+    listName:'彰化站點清單',
+    stations:[
+            {name:'彰化',index:32},
+            {name:'線西',index:33},
+            {name:'二林',index:34},
+            {name:'大成',index:77},
+            {name:'員林',index:78}
+            ]
+    },
+    {
+    listName:'南投站點清單',
+    stations:[
+            {name:'南投',index:35},
+            {name:'埔里',index:70},
+            {name:'竹山',index:67}
+            ]
+    }
+
+]
+
+/*
+{
+name:基隆站點清單,
+    stations:[{name:基隆,index:0}]    
+},
+基隆
+新北
+台北
+桃園
+新竹
+苗栗
+台中
+彰化
+南投
+雲林
+嘉義
+台南
+高雄
+屏東
+台東
+花蓮
+宜蘭
+外島
+
+
+*/

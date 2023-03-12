@@ -1,6 +1,4 @@
-# Example
+# 記錄
 
-To run this example:
-
-- `npm install` or `yarn`
-- `npm run dev` or `yarn dev`
+- v1.0.1
+>先判斷是不是測站清單，再判斷是否為輸入測站（陣列），排除以上則為錯誤輸入。
