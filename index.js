@@ -55,7 +55,7 @@ function handleEvent(event) {
 let reply = event.message.text ;
 let found; 
 
-if( reply == '地區列表' ){
+if( reply == '測站清單' ){
   
     return client.replyMessage(event.replyToken, {
     type: 'text',
@@ -77,7 +77,7 @@ arrayLocation.forEach((item ,index)=> {
  
 
 if (found == undefined){
-  found = '你輸入錯誤的地點，請重新輸入';
+  found = '你輸入錯誤的監測站名稱，請重新輸入，若要檢視有哪些監測站，可以輸入「測站清單」';
 }
 //console.log("這是陣列第"+found+"個");
 
