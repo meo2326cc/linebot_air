@@ -310,9 +310,12 @@ export const stationList = {
           }
 }
 
-export let airSituation = {
-  "type": "carousel",
-  "contents": [
+export function  airSituation(sitename,aqi,aqiColor,status,pollutant,pm25,pm10,co,no2,so2,o3,publishtime){
+  
+   const template = {
+  "type": "flex",
+  "altText": "目前"+sitename+"的空氣品質"+status+"，AQI為"+aqi,
+  "contents":
     {
       "type": "bubble",
       "size": "kilo",
@@ -322,7 +325,7 @@ export let airSituation = {
         "contents": [
           {
             "type": "text",
-            "text": "",
+            "text": sitename,
             "weight": "bold",
             "size": "md"
           }
@@ -348,7 +351,7 @@ export let airSituation = {
                   },
                   {
                     "type": "text",
-                    "text": "",
+                    "text": aqi,
                     "align": "center",
                     "size": "xxl"
                   }
@@ -356,7 +359,7 @@ export let airSituation = {
               }
             ],
             "borderWidth": "16px",
-            "borderColor": "",
+            "borderColor": aqiColor,
             "width": "160px",
             "height": "160px",
             "cornerRadius": "90px",
@@ -366,7 +369,7 @@ export let airSituation = {
           },
           {
             "type": "text",
-            "text": "",
+            "text": status,
             "margin": "md",
             "size": "xl"
           }
@@ -398,7 +401,7 @@ export let airSituation = {
                   },
                   {
                     "type": "text",
-                    "text": "",
+                    "text": " " + pollutant,
                     "size": "xs",
                     "color": "#8c8c8c",
                     "align": "end"
@@ -419,7 +422,7 @@ export let airSituation = {
                   },
                   {
                     "type": "text",
-                    "text": "(μg/m3)",
+                    "text": pm25 + "(μg/m3)",
                     "size": "xs",
                     "color": "#8c8c8c",
                     "align": "end"
@@ -440,7 +443,7 @@ export let airSituation = {
                   },
                   {
                     "type": "text",
-                    "text": "(μg/m3)",
+                    "text": pm10 + "(μg/m3)",
                     "size": "xs",
                     "color": "#8c8c8c",
                     "align": "end"
@@ -461,7 +464,7 @@ export let airSituation = {
                   },
                   {
                     "type": "text",
-                    "text": "(ppm)",
+                    "text":  co + "(ppm)",
                     "size": "xs",
                     "color": "#8c8c8c",
                     "align": "end"
@@ -482,7 +485,7 @@ export let airSituation = {
                   },
                   {
                     "type": "text",
-                    "text": "(ppb)",
+                    "text": no2 +"(ppb)",
                     "size": "xs",
                     "color": "#8c8c8c",
                     "align": "end"
@@ -503,7 +506,7 @@ export let airSituation = {
                   },
                   {
                     "type": "text",
-                    "text": "(ppb)",
+                    "text": so2 +"(ppb)",
                     "size": "xs",
                     "color": "#8c8c8c",
                     "align": "end"
@@ -524,7 +527,7 @@ export let airSituation = {
                   },
                   {
                     "type": "text",
-                    "text": "(ppb)",
+                    "text": o3 +"(ppb)",
                     "size": "xs",
                     "color": "#8c8c8c",
                     "align": "end"
@@ -542,7 +545,7 @@ export let airSituation = {
         "contents": [
           {
             "type": "text",
-            "text": "",
+            "text": "資料更新時間"+ publishtime,
             "size": "xxs",
             "color": "#8c8c8c",
             "align": "start",
@@ -558,41 +561,10 @@ export let airSituation = {
           "separator": true
         }
       }
-    },
-    {
-      "type": "bubble",
-      "size": "kilo",
-      "header": {
-        "type": "box",
-        "layout": "vertical",
-        "contents": [
-          {
-            "type": "text",
-            "text": "chatGPT建議",
-            "size": "md",
-            "weight": "bold"
-          }
-        ]
-      },
-      "body": {
-        "type": "box",
-        "layout": "vertical",
-        "contents": [
-          {
-            "type": "box",
-            "layout": "vertical",
-            "contents": []
-          },
-          {
-            "type": "text",
-            "text": "",
-            "wrap": true
-          }
-        ]
-      }
     }
-  ]
-}
+};
+return template 
+} 
 
 //let [contents] = stationList.contents.hero.contents;
 //console.log(contents);
