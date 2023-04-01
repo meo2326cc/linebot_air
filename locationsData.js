@@ -16,7 +16,7 @@ export const locationsSort1 = [
             {name:'林口',index:8},
             {name:'淡水',index:9},
             {name:'三重',index:65},
-            {name:'樹林',index:83},
+            {name:'新北(樹林)',index:83},
             {name:'永和',index:68},
             {name:'富貴角',index:76}
             ]
@@ -42,7 +42,7 @@ export const locationsSort1 = [
             {name:'平鎮',index:19},
             {name:'龍潭',index:20},
             {name:'中壢',index:66},
-            {name:'三民',index:82}
+            {name:'桃園(三民)',index:82}
             ]
     },
     {
@@ -121,7 +121,7 @@ export const locationsSort1 = [
     stations:[
             {name:'美濃',index:46},
             {name:'橋頭',index:37},
-            {name:'仁武',index:38},
+            {name:'仁武',index:48},
             {name:'鳳山',index:49},
             {name:'大寮',index:50},
             {name:'林園',index:51},
