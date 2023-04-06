@@ -19,11 +19,14 @@ const bdActions = {
 
 //----空氣資料初始化----
 let data;
-const catchData = axios.get('https://data.epa.gov.tw/api/v2/aqx_p_432?api_key=e8dd42e6-9b8b-43f8-991e-b3dee723a52d&limit=1000&sort=ImportDate%20desc&format=JSON');
 
+function getAirdata(){const catchData = axios.get('https://data.epa.gov.tw/api/v2/aqx_p_432?api_key=e8dd42e6-9b8b-43f8-991e-b3dee723a52d&limit=1000&sort=ImportDate%20desc&format=JSON');
 catchData.then((res)=>{
 	data = res.data.records
-  }).catch((err) => console.log(err));
+  }).catch((err) => console.log(err));}
+getAirdata()
+
+setInterval(getAirdata,3600000)
 //----空氣資料初始化結束----
 
 //----lineSDK----
