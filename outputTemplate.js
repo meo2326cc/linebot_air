@@ -1,3 +1,11 @@
+export const aqiStatus = [
+            { max: 50, color: "#83c276" ,emoji:'🟢'},
+            { max: 100, color: "#eddb7e" ,emoji:'🟡'},
+            { max: 150, color: "#edac7e" ,emoji:'🟠'},
+            { max: 200, color: "#ed7e7e" ,emoji:'🔴'},
+            { max: 300, color: "#9a76b3" ,emoji:'🟣'},
+            { max: 500, color: "#7d4755" ,emoji:'🟤'},
+          ];
 export const locationsList = {
   type: "flex",
   altText: "請選擇地區",
@@ -331,14 +339,7 @@ export function stationList(stationArray,data) {
           layout: "vertical",
           contents: [],
           width: "8px",
-          backgroundColor: [
-            { max: 50, color: "#83c276" },
-            { max: 100, color: "#eddb7e" },
-            { max: 150, color: "#edac7e" },
-            { max: 200, color: "#ed7e7e" },
-            { max: 300, color: "#9a76b3" },
-            { max: 500, color: "#7d4755" },
-          ].find((item) => {
+          backgroundColor: aqiStatus.find((item) => {
             return item.max >= data[stationArray[i].index].aqi;
           }).color,
         },
@@ -375,7 +376,7 @@ export function airSituation(
 ) {
   const template = {
     type: "flex",
-    altText: "目前" + sitename + "的空氣品質" + status + "，AQI為" + aqi,
+    altText: `${aqiStatus.find(i => i.max>=aqi).emoji}目前" ${sitename} 的空氣品質 ${status}，AQI為 ${aqi} `,
     contents: {
       type: "bubble",
       size: "kilo",
@@ -611,6 +612,18 @@ export function airSituation(
             align: "start",
             margin: "none",
           },
+          {
+        "type": "button",
+        "action": {
+                "type": "message",
+                "label": "追蹤該站結果",
+                "text": "追蹤"+ sitename,
+              },
+        "style": "primary",
+        "gravity": "center",
+        "margin": "md",
+        "color": "#4c5a6e"
+      }
         ],
       },
       styles: {
