@@ -10,7 +10,7 @@ import { MongoClient } from "mongodb";
 //----mongodb database----
 const mongodbUrl = new MongoClient(process.env.url);
 
-//
+//----line----
 const config = {
   channelAccessToken: process.env.channelAccessToken,
   channelSecret: process.env.channelSecret,
@@ -49,7 +49,7 @@ const bdActions = {
   deleteData: async function (event) {
     //
   },
-  sendNotification: async function () {
+  sendNotification: async function (data) {
     try {
       await mongodbUrl.connect();
       const hasSavedlist = await mongodbUrl
@@ -63,7 +63,11 @@ const bdActions = {
             .collection("people")
             .find({ station: item })
             .toArray();
-          console.dir(res);
+            const userIds = res.map(item2 => item2.userId);
+            const handleText = data.find(item2 => item2.sitename == item);
+            //
+            client.multicast( userIds, [{type:'text',text:`目前${handleText.sitename}的空氣品質為${handleText.status}，aqi為${handleText.aqi}`}]);
+          //console.dir(res);
         })();
 
         //res.forEach(console.log);
@@ -114,7 +118,7 @@ function handleEvent(event) {
     const noname = data.find((item) => item.sitename == message.slice(2));
     noname !== undefined
       ? bdActions.insertData(noname, event)
-      : bdActions.sendNotification(); //console.log("no");
+      : bdActions.sendNotification(data); //console.log("no");
   } else {
     let found = locationsSort1.find((item) => item.listName == message);
 
