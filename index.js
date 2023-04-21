@@ -3,7 +3,12 @@ import * as line from "@line/bot-sdk";
 import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
-import { aqiStatus ,locationsList, stationList, airSituation } from "./outputTemplate.js";
+import {
+  aqiStatus,
+  locationsList,
+  stationList,
+  airSituation,
+} from "./outputTemplate.js";
 import { locationsSort1 } from "./locationsData.js";
 import { MongoClient } from "mongodb";
 
@@ -41,15 +46,18 @@ const bdActions = {
             station: stationName.sitename,
             userId: event.source.userId,
           });
-          
-          client.replyMessage(event.replyToken, {
-          type: "text",
-          text: `已追蹤${stationName.sitename}站點空氣品質，若該地aqi值超過100時，我們將會通知您。`,
-        });
+
+      client.replyMessage(event.replyToken, {
+        type: "text",
+        text: `已追蹤${stationName.sitename}站點空氣品質，若該地aqi值超過50時，我們將會通知您。`,
+      });
       //.insertOne({ station: stationName.sitename ,userID: lineUser});
     } catch (err) {
       console.log(err.stack);
-      client.replyMessage(event.replyToken, {type: "text",text: "目前系統連接資料庫發生問題，請稍後再試或聯繫工程師", });
+      client.replyMessage(event.replyToken, {
+        type: "text",
+        text: "目前系統連接資料庫發生問題，請稍後再試或聯繫工程師",
+      });
     }
   },
   deleteData: async function (event) {
@@ -63,20 +71,30 @@ const bdActions = {
         .collection("people")
         .distinct("station");
       hasSavedlist.forEach((item) => {
-        const handleText = data.find(item2 => item2.sitename == item);
-        handleText.aqi >=100 
-        ? (async () => {
-          const res = await mongodbUrl
-            .db("test")
-            .collection("people")
-            .find({ station: item })
-            .toArray();
-            const userIds = res.map(item2 => item2.userId);
-            //
-            client.multicast( userIds, [{type:'text',text:`⚠️${aqiStatus.find(i => i.max>=handleText.aqi).emoji}目前${handleText.sitename}的空氣品質為${handleText.status}，aqi為${handleText.aqi}`}]);
-            
-          //console.dir(res);
-        })() : null ;
+        const handleText = data.find((item2) => item2.sitename == item);
+        handleText.aqi >= 50
+          ? (async () => {
+              const res = await mongodbUrl
+                .db("test")
+                .collection("people")
+                .find({ station: item })
+                .toArray();
+              const userIds = res.map((item2) => item2.userId);
+              //
+              client.multicast(userIds, [
+                {
+                  type: "text",
+                  text: `⚠️${
+                    aqiStatus.find((i) => i.max >= handleText.aqi).emoji
+                  }目前【${handleText.sitename}】的空氣品質為${
+                    handleText.status
+                  }，aqi為${handleText.aqi}`,
+                },
+              ]);
+
+              //console.dir(res);
+            })()
+          : null;
 
         //res.forEach(console.log);
       });
@@ -101,7 +119,10 @@ function getAirdata() {
 }
 getAirdata();
 
-setInterval( ()=>{getAirdata();bdActions.sendNotification(data)}, 3600000);
+setInterval(() => {
+  getAirdata();
+  bdActions.sendNotification(data);
+}, 3600000);
 //----空氣資料初始化結束----
 
 //----lineSDK----
@@ -123,10 +144,15 @@ function handleEvent(event) {
   } else if (message == "測站清單") {
     return client.replyMessage(event.replyToken, locationsList);
   } else if (message.indexOf("追蹤") == 0) {
-    const filterStation = data.find((item) => item.sitename == message.slice(2));
+    const filterStation = data.find(
+      (item) => item.sitename == message.slice(2)
+    );
     filterStation !== undefined
       ? bdActions.insertData(filterStation, event)
-      : client.replyMessage(event.replyToken, {type: "text",text: "查無該測站，無法追蹤",}) // bdActions.sendNotification(data); 
+      : client.replyMessage(event.replyToken, {
+          type: "text",
+          text: "查無該測站，無法追蹤",
+        }); // bdActions.sendNotification(data);
   } else {
     let found = locationsSort1.find((item) => item.listName == message);
 

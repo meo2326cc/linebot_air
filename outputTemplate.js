@@ -376,7 +376,7 @@ export function airSituation(
 ) {
   const template = {
     type: "flex",
-    altText: `${aqiStatus.find(i => i.max>=aqi).emoji}目前" ${sitename} 的空氣品質 ${status}，AQI為 ${aqi} `,
+    altText: `${aqiStatus.find(i => i.max>=aqi).emoji}目前【${sitename}】的空氣品質${status}，AQI為${aqi}`,
     contents: {
       type: "bubble",
       size: "kilo",
