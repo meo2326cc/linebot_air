@@ -3,7 +3,12 @@ import * as line from "@line/bot-sdk";
 import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
-import { locationsList, stationList, airSituation } from "./outputTemplate.js";
+import {
+  aqiStatus,
+  locationsList,
+  stationList,
+  airSituation,
+} from "./outputTemplate.js";
 import { locationsSort1 } from "./locationsData.js";
 import { MongoClient } from "mongodb";
 
@@ -41,9 +46,18 @@ const bdActions = {
             station: stationName.sitename,
             userId: event.source.userId,
           });
+
+      client.replyMessage(event.replyToken, {
+        type: "text",
+        text: `已追蹤${stationName.sitename}站點空氣品質，若該地aqi值超過50時，我們將會通知您。`,
+      });
       //.insertOne({ station: stationName.sitename ,userID: lineUser});
     } catch (err) {
       console.log(err.stack);
+      client.replyMessage(event.replyToken, {
+        type: "text",
+        text: "目前系統連接資料庫發生問題，請稍後再試或聯繫工程師",
+      });
     }
   },
   deleteData: async function (event) {
@@ -57,18 +71,30 @@ const bdActions = {
         .collection("people")
         .distinct("station");
       hasSavedlist.forEach((item) => {
-        (async () => {
-          const res = await mongodbUrl
-            .db("test")
-            .collection("people")
-            .find({ station: item })
-            .toArray();
-            const userIds = res.map(item2 => item2.userId);
-            const handleText = data.find(item2 => item2.sitename == item);
-            //
-            client.multicast( userIds, [{type:'text',text:`目前${handleText.sitename}的空氣品質為${handleText.status}，aqi為${handleText.aqi}`}]);
-          //console.dir(res);
-        })();
+        const handleText = data.find((item2) => item2.sitename == item);
+        handleText.aqi >= 50
+          ? (async () => {
+              const res = await mongodbUrl
+                .db("test")
+                .collection("people")
+                .find({ station: item })
+                .toArray();
+              const userIds = res.map((item2) => item2.userId);
+              //
+              client.multicast(userIds, [
+                {
+                  type: "text",
+                  text: `⚠️${
+                    aqiStatus.find((i) => i.max >= handleText.aqi).emoji
+                  }目前【${handleText.sitename}】的空氣品質為${
+                    handleText.status
+                  }，aqi為${handleText.aqi}`,
+                },
+              ]);
+
+              //console.dir(res);
+            })()
+          : null;
 
         //res.forEach(console.log);
       });
@@ -93,7 +119,10 @@ function getAirdata() {
 }
 getAirdata();
 
-setInterval(getAirdata, 3600000);
+setInterval(() => {
+  getAirdata();
+  bdActions.sendNotification(data);
+}, 3600000);
 //----空氣資料初始化結束----
 
 //----lineSDK----
@@ -115,10 +144,15 @@ function handleEvent(event) {
   } else if (message == "測站清單") {
     return client.replyMessage(event.replyToken, locationsList);
   } else if (message.indexOf("追蹤") == 0) {
-    const noname = data.find((item) => item.sitename == message.slice(2));
-    noname !== undefined
-      ? bdActions.insertData(noname, event)
-      : bdActions.sendNotification(data); //console.log("no");
+    const filterStation = data.find(
+      (item) => item.sitename == message.slice(2)
+    );
+    filterStation !== undefined
+      ? bdActions.insertData(filterStation, event)
+      : client.replyMessage(event.replyToken, {
+          type: "text",
+          text: "查無該測站，無法追蹤",
+        }); // bdActions.sendNotification(data);
   } else {
     let found = locationsSort1.find((item) => item.listName == message);
 
@@ -144,14 +178,7 @@ function handleEvent(event) {
           o3,
           publishtime,
         } = found;
-        const aqiColor = [
-          { max: 50, color: "#83c276" },
-          { max: 100, color: "#eddb7e" },
-          { max: 150, color: "#edac7e" },
-          { max: 200, color: "#ed7e7e" },
-          { max: 300, color: "#9a76b3" },
-          { max: 500, color: "#7d4755" },
-        ].find((item) => item.max >= aqi).color;
+        const aqiColor = aqiStatus.find((item) => item.max >= aqi).color;
         return client.replyMessage(
           event.replyToken,
           airSituation(
