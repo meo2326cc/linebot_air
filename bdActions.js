@@ -8,6 +8,7 @@ const config = {
   channelSecret: process.env.channelSecret,
 };
 const client = new line.Client(config);
+import { aqiStatus } from "./outputTemplate.js";
 
 export default {
   aqiReport : 80 ,
@@ -15,7 +16,6 @@ export default {
   mongodbConnect : new MongoClient(process.env.url).db("test").collection("people"),
   insertData: async function (stationName, event) {
     try {
-      await this.mongodbConnect.connect();
       const hasSavedlist = await this.mongodbConnect
         .distinct("userId");
       const matchUser = hasSavedlist.find(
@@ -63,7 +63,6 @@ export default {
   },
   sendNotification: async function (data) {
     try {
-      await this.mongodbConnect.connect();
       const hasSavedlist = await this.mongodbConnect
         .distinct("station");
       hasSavedlist.forEach((item) => {
@@ -92,5 +91,5 @@ export default {
     } catch (err) {
       console.log(err);
     }
-  },
+  }
 };
