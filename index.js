@@ -20,7 +20,7 @@ const config = {
   channelAccessToken: process.env.channelAccessToken,
   channelSecret: process.env.channelSecret,
 };
-
+const client = new line.Client(config);
 
 //----空氣資料初始化----
 let data;
@@ -32,6 +32,7 @@ function getAirdata() {
   catchData
     .then((res) => {
       data = res.data.records;
+      data == undefined ? client.pushMessage( process.env.mylineId ,{type:'text',text:'無法取得資料，需要注意'})  : null ;
     })
     .catch((err) => console.log(err));
 }
@@ -45,13 +46,13 @@ setInterval(() => {
 
 //----lineSDK----
 const app = express();
-app.post("/webhook", line.middleware(config), (req, res) => {
+app.post("/", line.middleware(config), (req, res) => {
   Promise.all(req.body.events.map(handleEvent)).then((result) => {
     res.json(result);
   });
 });
 
-const client = new line.Client(config);
+
 
 function handleEvent(event) {
   //reply內容為使用者傳來的訊息
