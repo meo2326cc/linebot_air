@@ -61,7 +61,9 @@ function handleEvent(event) {
     return Promise.resolve(null);
   } else if (message == "測站清單") {
     return client.replyMessage(event.replyToken, locationsList);
-  } else if (message.indexOf("追蹤") == 0) {
+  } else if (message == "取消追蹤"){
+    bdActions.deleteData(event)
+  }else if (message.indexOf("追蹤") == 0) {
     const filterStation = data.find(
       (item) => item.sitename == message.slice(2)
     );
