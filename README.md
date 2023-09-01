@@ -1,4 +1,18 @@
-# 記錄
+#所需環境變數
 
-- v1.0.1
->先判斷是不是測站清單，再判斷是否為輸入測站（陣列），排除以上則為錯誤輸入。
+```
+
+//line
+channelAccessToken
+channelSecret
+
+//zeabur
+PORT
+
+//mongodb
+url
+
+//aqiReport
+aqiReport
+
+```
