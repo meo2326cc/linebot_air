@@ -11,7 +11,7 @@ const client = new line.Client(config);
 import { aqiStatus } from "./outputTemplate.js";
 
 export default {
-  aqiReport : 80 ,
+  aqiReport : process.env.aqiReport ,
   actions: ["取消追蹤", "說明"],
   mongodbConnect : new MongoClient(process.env.url).db("test").collection("people"),
   insertData: async function (stationName, event) {
