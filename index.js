@@ -20,7 +20,9 @@ const config = {
   channelAccessToken: process.env.channelAccessToken,
   channelSecret: process.env.channelSecret,
 };
+
 const client = new line.Client(config);
+
 
 //----空氣資料初始化----
 let data;
@@ -32,7 +34,6 @@ function getAirdata() {
   catchData
     .then((res) => {
       data = res.data.records;
-      data == undefined ? client.pushMessage( process.env.mylineId ,{type:'text',text:'無法取得資料，需要注意'})  : null ;
     })
     .catch((err) => console.log(err));
 }
@@ -127,4 +128,4 @@ function handleEvent(event) {
   }
 }
 
-app.listen(3001);
+app.listen(process.env.PORT);

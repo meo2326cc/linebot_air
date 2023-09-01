@@ -391,6 +391,11 @@ export function airSituation(
             size: "md",
           },
         ],
+        action: {
+          type: "message",
+          label: sitename,
+          text: sitename
+        }
       },
       hero: {
         type: "box",
