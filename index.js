@@ -61,11 +61,11 @@ function handleEvent(event) {
   //console.log(event);
   if (event.type !== "message" || event.message.type !== "text") {
     return Promise.resolve(null);
-  } else if (message == "測站清單") {
+  } else if (message === "測站清單") {
     return client.replyMessage(event.replyToken, locationsList);
-  } else if (message == "取消追蹤"){
+  } else if (message === "取消追蹤"){
     bdActions.deleteData(event)
-  }else if(message == "暫停通知3小時"){
+  }else if(message === "暫停通知3小時"){
     bdActions.disableNotification(event)
   }else if (message.indexOf("追蹤") == 0) {
     const filterStation = data.find(
@@ -78,7 +78,7 @@ function handleEvent(event) {
           text: "查無該測站，無法追蹤",
         }); // bdActions.sendNotification(data);
   } else {
-    let found = locationsSort1.find((item) => item.listName == message);
+    let found = locationsSort1.find((item) => item.listName === message);
 
     if (found !== undefined) {
       return client.replyMessage(
@@ -129,5 +129,4 @@ function handleEvent(event) {
     }
   }
 }
-
-app.listen(3000);
+app.listen(process.env.PORT);
