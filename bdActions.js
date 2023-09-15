@@ -8,7 +8,7 @@ const config = {
   channelSecret: process.env.channelSecret,
 };
 const client = new line.Client(config);
-import { aqiStatus } from "./outputTemplate.js";
+import { aqiStatus, warningTemplate } from "./outputTemplate.js";
 
 export default {
   aqiReport : process.env.aqiReport ,
@@ -72,23 +72,34 @@ export default {
               const res = await this.mongodbConnect
                 .find({ station: item })
                 .toArray();
-              const userIds = res.map((item2) => item2.userId);
+              const userIds = res.filter((item2) => {
+              return item2.disableTime < Date().now || item2.disableTime === undefined
+            }).map(item2 => item2.userId );
               //
               client.multicast(userIds, [
-                {
-                  type: "text",
-                  text: `⚠️${
-                    aqiStatus.find((i) => i.max >= handleText.aqi).emoji
-                  }目前【${handleText.sitename}】的空氣品質${
-                    handleText.status
-                  }，AQI為${handleText.aqi}`,
-                },
+                warningTemplate(aqiStatus,handleText),
               ]);
             })()
           : null;
       });
     } catch (err) {
       console.log(err);
+    }
+  },
+  disableNotification: async function(event){
+        const time = Date.now() + 10800000 ;
+    try{
+      await this.mongodbConnect.updateOne({ userId: event.source.userId },{$set:{disableTime:time}})
+      client.replyMessage(event.replyToken, {
+        type: "text",
+        text: "從現在開始算起3小時內，您將不會收到通知",
+      });
+    }catch(err){
+      console.log(err.stack);
+      client.replyMessage(event.replyToken, {
+        type: "text",
+        text: "連接資料庫發生問題，無法完成目前操作，請稍後再試或聯繫工程師",
+      });
     }
   }
 };

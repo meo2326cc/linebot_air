@@ -65,6 +65,8 @@ function handleEvent(event) {
     return client.replyMessage(event.replyToken, locationsList);
   } else if (message == "取消追蹤"){
     bdActions.deleteData(event)
+  }else if(message == "暫停通知3小時"){
+    bdActions.disableNotification(event)
   }else if (message.indexOf("追蹤") == 0) {
     const filterStation = data.find(
       (item) => item.sitename == message.slice(2)
@@ -128,4 +130,4 @@ function handleEvent(event) {
   }
 }
 
-app.listen(process.env.PORT);
+app.listen(3000);

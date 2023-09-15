@@ -641,8 +641,91 @@ export function airSituation(
       },
     },
   };
+
   return template;
 }
 
+
+
 //let [contents] = stationList.contents.hero.contents;
 //console.log(contents);
+export function warningTemplate(aqiStatus,handleText,) {
+ const template = {
+ "type": "flex",
+ "altText":`⚠️${
+  aqiStatus.find((i) => i.max >= handleText.aqi).emoji
+}目前【${handleText.sitename}】的空氣品質${
+  handleText.status
+}，AQI為${handleText.aqi}`,
+ "contents":{
+  "type": "bubble",
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": `⚠️追蹤結果【${handleText.sitename}】`,
+        "weight": "bold",
+        "size": "xl",
+        "wrap": true
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "margin": "lg",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": `${
+              aqiStatus.find((i) => i.max >= handleText.aqi).emoji
+            }目前【${handleText.sitename}】的空氣品質${
+              handleText.status
+            }，AQI為${handleText.aqi}`,
+            "wrap": true
+          }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "horizontal",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "button",
+        "action": {
+          "type": "message",
+          "label": "暫停通知",
+          "text": "暫停通知3小時"
+        },
+        "style": "primary",
+        "gravity": "center",
+        "margin": "md",
+        "color": "#4c5a6e"
+      },
+      {
+        "type": "button",
+        "action": {
+          "type": "message",
+          "label": "取消追蹤",
+          "text": "取消追蹤"
+        },
+        "style": "primary",
+        "gravity": "center",
+        "margin": "md",
+        "color": "#d64040"
+      }
+    ],
+    "flex": 0,
+    "paddingStart": "0px"
+  }
+}
+}
+
+return template
+
+}
+
