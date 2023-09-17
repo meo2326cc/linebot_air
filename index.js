@@ -27,22 +27,25 @@ const client = new line.Client(config);
 //----空氣資料初始化----
 let data;
 
-function getAirdata() {
-  const catchData = axios.get(
+const getAirdata = async() => {
+try{
+   const catchData = await axios.get(
     "https://data.epa.gov.tw/api/v2/aqx_p_432?api_key=e8dd42e6-9b8b-43f8-991e-b3dee723a52d&limit=1000&sort=ImportDate%20desc&format=JSON"
   );
-  catchData
-    .then((res) => {
-      data = res.data.records;
-    })
-    .catch((err) => console.log(err));
-}
+  data = catchData.data.records
+}catch(err){
+  console.log(err)
+}}
 getAirdata();
 
-setInterval(() => {
-  getAirdata();
+
+async function updateData(){
+  const dataPromise = new Promise(res => res(getAirdata()))
+  await dataPromise;
   bdActions.sendNotification(data);
-}, 3600000);
+}
+
+setInterval(updateData, 3600000);
 //----空氣資料初始化結束----
 
 //----lineSDK----
