@@ -13,7 +13,6 @@ import { locationsSort1 } from "./locationsData.js";
 import bdActions from "./bdActions.js";
 
 
-//----mongodb database----
 
 //----line----
 const config = {
@@ -34,19 +33,30 @@ try{
   );
   data = catchData.data.records
 }catch(err){
-  console.log(err)
+  console.log('取得資料發生錯誤'+err)
 }}
 getAirdata();
 
 
 async function updateData(){
-  const dataPromise = new Promise(res => res(getAirdata()))
-  await dataPromise;
-  bdActions.sendNotification(data);
+await new Promise(res => res(getAirdata()))
+bdActions.sendNotification(data);
 }
 
 setInterval(updateData, 3600000);
 //----空氣資料初始化結束----
+
+function trackingStation (data , event ,message){
+  const filterStation = data.find(
+    item => item.sitename == message.slice(2)
+  );
+  filterStation !== undefined
+    ? bdActions.insertData(filterStation, event)
+    : client.replyMessage(event.replyToken, {
+        type: "text",
+        text: "查無該測站，無法追蹤",
+      });
+}
 
 //----lineSDK----
 const app = express();
@@ -68,18 +78,10 @@ function handleEvent(event) {
     return client.replyMessage(event.replyToken, locationsList);
   } else if (message === "取消追蹤"){
     bdActions.deleteData(event)
-  }else if(message === "暫停通知3小時"){
+  } else if(message === "暫停通知3小時"){
     bdActions.disableNotification(event)
-  }else if (message.indexOf("追蹤") == 0) {
-    const filterStation = data.find(
-      (item) => item.sitename == message.slice(2)
-    );
-    filterStation !== undefined
-      ? bdActions.insertData(filterStation, event)
-      : client.replyMessage(event.replyToken, {
-          type: "text",
-          text: "查無該測站，無法追蹤",
-        }); // bdActions.sendNotification(data);
+  } else if (message.indexOf("追蹤") == 0) {
+    trackingStation(data , event , message)
   } else {
     let found = locationsSort1.find((item) => item.listName === message);
 

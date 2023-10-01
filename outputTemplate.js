@@ -5,6 +5,7 @@ export const aqiStatus = [
             { max: 200, color: "#ed7e7e" ,emoji:'🔴'},
             { max: 300, color: "#9a76b3" ,emoji:'🟣'},
             { max: 500, color: "#7d4755" ,emoji:'🟤'},
+            { max: undefined, color: "#808080" ,emoji:'❓'}
           ];
 export const locationsList = {
   type: "flex",
@@ -340,8 +341,8 @@ export function stationList(stationArray,data) {
           contents: [],
           width: "8px",
           backgroundColor: aqiStatus.find((item) => {
-            return item.max >= data[stationArray[i].index].aqi;
-          }).color,
+            return item.max >= data[stationArray[i].index]?.aqi;
+          })?.color,
         },
       ],
     });
@@ -361,18 +362,18 @@ export function stationList(stationArray,data) {
 */
 
 export function airSituation(
-  sitename,
-  aqi,
-  aqiColor,
-  status,
-  pollutant,
-  pm25,
-  pm10,
-  co,
-  no2,
-  so2,
-  o3,
-  publishtime
+  sitename = '未取得',
+  aqi= '未取得',
+  aqiColor= '#808080',
+  status= '未取得',
+  pollutant= '未取得',
+  pm25= '未取得',
+  pm10= '未取得',
+  co= '未取得',
+  no2= '未取得',
+  so2= '未取得',
+  o3= '未取得',
+  publishtime= '未取得'
 ) {
   const template = {
     type: "flex",
