@@ -73,7 +73,7 @@ export default {
                 .find({ station: item })
                 .toArray();
               const userIds = res.filter((item2) => {
-              return item2.disableTime < Date().now || item2.disableTime === undefined
+              return item2.disableTime < Date.now() || item2.disableTime === undefined
             }).map(item2 => item2.userId );
               //
               client.multicast(userIds, [
