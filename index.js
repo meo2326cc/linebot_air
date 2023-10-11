@@ -33,7 +33,7 @@ try{
   );
   data = catchData.data.records
 }catch(err){
-  console.log('取得資料發生錯誤'+err)
+  console.log('取得遠端空氣資料發生錯誤'+err)
 }}
 getAirdata();
 

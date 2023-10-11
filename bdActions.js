@@ -83,7 +83,7 @@ export default {
           : null;
       });
     } catch (err) {
-      console.log('傳欉通知錯誤！'+err);
+      console.log('發送通知遇到錯誤！'+err);
     }
   },
   disableNotification: async function(event){
