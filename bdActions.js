@@ -9,6 +9,7 @@ const config = {
 };
 const client = new line.Client(config);
 import { aqiStatus, warningTemplate } from "./outputTemplate.js";
+import { log } from "console";
 
 export default {
   aqiReport : process.env.aqiReport ,
@@ -19,7 +20,7 @@ export default {
       const hasSavedlist = await this.mongodbConnect
         .distinct("userId");
       const matchUser = hasSavedlist.find(
-        (item) => item == event.source.userId
+        (item) => item === event.source.userId
       );
       matchUser !== undefined
         ? await this.mongodbConnect
@@ -62,16 +63,29 @@ export default {
       }
   },
   sendNotification: async function (data) {
+    //
+    console.log('是否讀得到data：' + typeof data)
+    //
     try {
       const hasSavedlist = await this.mongodbConnect
         .distinct("station");
       hasSavedlist.forEach((item) => {
-        const handleText = data.find((item2) => item2.sitename == item);
+        //
+        console.log('70行：'+ hasSavedlist )
+        //
+        const handleText = data.find((item2) => item2.sitename === item);
+        //
+        console.log(`handleText.aqi(該地aqi)：${handleText.aqi } & this.aqiReport(自訂aqi=80) ${this.aqiReport}` )
+        //是就執行，否就跳至null
+        //
         handleText.aqi >= this.aqiReport
           ? (async () => {
               const res = await this.mongodbConnect
                 .find({ station: item })
                 .toArray();
+                //
+                console.log(res)
+                //
               const userIds = res.filter((item2) => {
               return item2.disableTime < Date.now() || item2.disableTime === undefined
             }).map(item2 => item2.userId );
