@@ -161,7 +161,7 @@ export const locationsSort1 = [
     listName:'宜蘭站點清單',
     stations:[
             {name:'宜蘭',index:63},
-            {name:'東山',index:64}
+            {name:'冬山',index:64}
             ]
     },
     {

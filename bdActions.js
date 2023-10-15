@@ -80,6 +80,7 @@ export default {
         //
         handleText.aqi >= this.aqiReport
           ? (async () => {
+            try{
               const res = await this.mongodbConnect
                 .find({ station: item })
                 .toArray();
@@ -87,17 +88,21 @@ export default {
                 console.log(res)
                 //
               const userIds = res.filter((item2) => {
-              return item2.disableTime < Date.now() || item2.disableTime === undefined
+              return item2?.disableTime < Date.now() || item2?.disableTime === undefined
             }).map(item2 => item2.userId );
               //
               client.multicast(userIds, [
-                warningTemplate(aqiStatus,handleText),
+                warningTemplate(aqiStatus,handleText)
               ]);
+            }catch(err){
+              console.log(' line端 傳送通知遇到錯誤 ' +err )
+            }
+
             })()
           : null;
       });
     } catch (err) {
-      console.log('發送通知遇到錯誤！'+err);
+      console.log('篩選 傳送通知遇到錯誤！'+err);
     }
   },
   disableNotification: async function(event){
