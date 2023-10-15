@@ -63,9 +63,7 @@ export default {
       }
   },
   sendNotification: async function (data) {
-    //
-    console.log('是否讀得到data：' + typeof data)
-    //
+
     try {
       const hasSavedlist = await this.mongodbConnect
         .distinct("station");
@@ -75,7 +73,7 @@ export default {
         //
         const handleText = data.find((item2) => item2.sitename === item);
         //
-        console.log(`handleText.aqi(該地aqi)：${handleText.aqi } & this.aqiReport(自訂aqi=80) ${this.aqiReport}` )
+        console.log(`${handleText.aqi } &  ${this.aqiReport}` )
         //是就執行，否就跳至null
         //
         handleText.aqi >= this.aqiReport
@@ -99,7 +97,7 @@ export default {
             }
 
             })()
-          : null;
+          : console.log(item+'通知未發送');
       });
     } catch (err) {
       console.log('篩選 傳送通知遇到錯誤！'+err);
