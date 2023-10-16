@@ -9,7 +9,6 @@ const config = {
 };
 const client = new line.Client(config);
 import { aqiStatus, warningTemplate } from "./outputTemplate.js";
-import { log } from "console";
 
 export default {
   aqiReport : process.env.aqiReport ,
@@ -73,15 +72,14 @@ export default {
         //
         const handleText = data.find((item2) => item2.sitename === item);
         //
-        console.log(`${handleText.aqi } &  ${this.aqiReport}` )
+        console.log(`${handleText.aqi }  &  ${this.aqiReport}` )
         //是就執行，否就跳至null
         //
-        handleText.aqi >= this.aqiReport
-          ? (async () => {
+        if(Number(handleText.aqi) >= this.aqiReport) {
+          (async () => {
             try{
               const res = await this.mongodbConnect
-                .find({ station: item })
-                .toArray();
+                .find({ station: item }).toArray();
                 //
                 console.log(res)
                 //
@@ -93,23 +91,25 @@ export default {
                 warningTemplate(aqiStatus,handleText)
               ]);
             }catch(err){
-              console.log(' line端 傳送通知遇到錯誤 ' +err )
+              console.log(' line端 傳送通知遇到錯誤 ' + err )
             }
 
             })()
-          : console.log(item+'通知未發送');
+        }else{
+          console.log(item+'通知未發送');
+        }
       });
-    } catch (err) {
-      console.log('篩選 傳送通知遇到錯誤！'+err);
+    } catch (error) {
+      console.log('篩選 傳送通知遇到錯誤！'+error);
     }
   },
   disableNotification: async function(event){
-        const time = Date.now() + 10800000 ;
+        const time = Date.now() + 14400000 ;
     try{
       await this.mongodbConnect.updateOne({ userId: event.source.userId },{$set:{disableTime:time}})
       client.replyMessage(event.replyToken, {
         type: "text",
-        text: "從現在開始算起3小時內，您將不會收到通知",
+        text: "從現在開始算起4小時內，您將不會收到通知",
       });
     }catch(err){
       console.log(err.stack);
