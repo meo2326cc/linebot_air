@@ -78,7 +78,7 @@ function handleEvent(event) {
     return client.replyMessage(event.replyToken, locationsList);
   } else if (message === "取消追蹤"){
     bdActions.deleteData(event)
-  } else if(message === "暫停通知3小時"){
+  } else if(message === "暫停通知4小時"){
     bdActions.disableNotification(event)
   } else if (message.indexOf("追蹤") == 0) {
     trackingStation(data , event , message)
