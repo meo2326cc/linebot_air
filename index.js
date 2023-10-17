@@ -43,7 +43,8 @@ await new Promise(res => res(getAirdata()))
 bdActions.sendNotification(data);
 }
 
-setInterval(updateData, 3600000);
+setInterval(updateData, process.env.updateInterval);
+//3600000
 //----空氣資料初始化結束----
 
 function trackingStation (data , event ,message){
