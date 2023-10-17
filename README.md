@@ -15,4 +15,6 @@ url
 //aqiReport
 aqiReport
 
+//updateInterval
+milliseconds
 ```
