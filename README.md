@@ -17,4 +17,7 @@ aqiReport
 
 //updateInterval
 milliseconds
+
+//disableNotificationTime
+hr
 ```

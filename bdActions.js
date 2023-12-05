@@ -104,12 +104,12 @@ export default {
     }
   },
   disableNotification: async function(event){
-        const time = Date.now() + 14400000 ;
+        const time = Date.now() + process.env.disableNotificationTime * 3600000 ;
     try{
       await this.mongodbConnect.updateOne({ userId: event.source.userId },{$set:{disableTime:time}})
       client.replyMessage(event.replyToken, {
         type: "text",
-        text: "從現在開始算起4小時內，您將不會收到通知",
+        text: `從現在開始算起${process.env.disableNotificationTime}小時內，您將不會收到通知`,
       });
     }catch(err){
       console.log(err.stack);

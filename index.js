@@ -79,11 +79,11 @@ function handleEvent(event) {
     return client.replyMessage(event.replyToken, locationsList);
   } else if (message === "取消追蹤"){
     bdActions.deleteData(event)
-  } else if(message === "暫停通知4小時"){
+  } else if(message === `暫停通知${process.env.disableNotificationTime}小時`){
     bdActions.disableNotification(event)
-  } else if (message.indexOf("追蹤") == 0) {
+  } else if (message.indexOf("追蹤") === 0) {
     trackingStation(data , event , message)
-  } else {
+  } else { //xx站點清單
     let found = locationsSort1.find((item) => item.listName === message);
 
     if (found !== undefined) {
@@ -92,10 +92,15 @@ function handleEvent(event) {
         stationList(found.stations, data)
       );
     } else {
-      found = data.find((item) => item.sitename == message);
-
+      found = data.find((item) => item.sitename === message);
       if (found !== undefined) {
-        const {
+
+        //防止沒資料出錯暫時解法
+
+        if(Object.keys(found).length === 0){
+            return( client.replyMessage(event.replyToken, airSituation()) ) 
+        }else{
+                  const {
           sitename,
           aqi,
           status,
@@ -126,6 +131,9 @@ function handleEvent(event) {
             publishtime
           )
         );
+        }
+
+
       } else {
         return client.replyMessage(event.replyToken, {
           type: "text",

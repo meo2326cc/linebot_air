@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 export const aqiStatus = [
             { max: 50, color: "#83c276" ,emoji:'🟢'},
             { max: 100, color: "#eddb7e" ,emoji:'🟡'},
@@ -700,7 +703,7 @@ export function warningTemplate(aqiStatus,handleText,) {
         "action": {
           "type": "message",
           "label": "暫停通知",
-          "text": "暫停通知4小時"
+          "text": `暫停通知${process.env.disableNotificationTime}小時`
         },
         "style": "primary",
         "gravity": "center",
