@@ -364,7 +364,7 @@ export function stationList(stationArray,data) {
                               }
 */
 
-export function airSituation(
+export function airSituation({
   sitename = '未取得',
   aqi= '未取得',
   aqiColor= '#808080',
@@ -377,7 +377,7 @@ export function airSituation(
   so2= '未取得',
   o3= '未取得',
   publishtime= '未取得'
-) {
+}) {
   const template = {
     type: "flex",
     altText: `${aqiStatus.find(i => i.max>=aqi).emoji}目前【${sitename}】的空氣品質${status}，AQI為${aqi}`,

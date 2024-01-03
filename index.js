@@ -68,7 +68,6 @@ app.post("/", line.middleware(config), (req, res) => {
 });
 
 
-
 function handleEvent(event) {
   //reply內容為使用者傳來的訊息
   const message = event.message.text;
@@ -79,7 +78,7 @@ function handleEvent(event) {
     return client.replyMessage(event.replyToken, locationsList);
   } else if (message === "取消追蹤"){
     bdActions.deleteData(event)
-  } else if(message === `暫停通知${process.env.disableNotificationTime}小時`){
+  } else if (message === "暫停通知"){
     bdActions.disableNotification(event)
   } else if (message.indexOf("追蹤") === 0) {
     trackingStation(data , event , message)
@@ -97,42 +96,28 @@ function handleEvent(event) {
 
         //防止沒資料出錯暫時解法
 
-        if(Object.keys(found).length === 0){
-            return( client.replyMessage(event.replyToken, airSituation()) ) 
-        }else{
-                  const {
-          sitename,
-          aqi,
-          status,
-          pollutant,
-          "pm2.5": pm25,
-          pm10,
-          co,
-          no2,
-          so2,
-          o3,
-          publishtime,
-        } = found;
+        // if(Object.keys(found).length === 0){
+        //     return( client.replyMessage(event.replyToken, airSituation()) ) 
+        // }else{
+
+        //防止沒資料出錯暫時解法2
+
+        const filterData =  Object.keys(found)
+        filterData.forEach( item => {
+          
+          if( found.item === "" ){
+            delete found.item
+          }
+        })
+
+
         const aqiColor = aqiStatus.find((item) => item.max >= aqi).color;
         return client.replyMessage(
           event.replyToken,
-          airSituation(
-            sitename,
-            aqi,
-            aqiColor,
-            status,
-            pollutant,
-            pm25,
-            pm10,
-            co,
-            no2,
-            so2,
-            o3,
-            publishtime
-          )
+          airSituation( {...found , aqiColor:aqiColor } )
         );
-        }
 
+        //}
 
       } else {
         return client.replyMessage(event.replyToken, {
@@ -143,4 +128,5 @@ function handleEvent(event) {
     }
   }
 }
+
 app.listen(process.env.PORT);
