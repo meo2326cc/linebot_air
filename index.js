@@ -111,7 +111,7 @@ function handleEvent(event) {
         })
 
 
-        const aqiColor = aqiStatus.find((item) => item.max >= aqi).color;
+        const aqiColor = aqiStatus.find((item) => item.max >= found?.aqi).color;
         return client.replyMessage(
           event.replyToken,
           airSituation( {...found , aqiColor:aqiColor } )
