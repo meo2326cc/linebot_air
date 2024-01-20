@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 export const aqiStatus = [
             { max: 50, color: "#83c276" ,emoji:'🟢'},
             { max: 100, color: "#eddb7e" ,emoji:'🟡'},
@@ -5,6 +8,7 @@ export const aqiStatus = [
             { max: 200, color: "#ed7e7e" ,emoji:'🔴'},
             { max: 300, color: "#9a76b3" ,emoji:'🟣'},
             { max: 500, color: "#7d4755" ,emoji:'🟤'},
+            { max: undefined, color: "#808080" ,emoji:'❓'}
           ];
 export const locationsList = {
   type: "flex",
@@ -340,8 +344,8 @@ export function stationList(stationArray,data) {
           contents: [],
           width: "8px",
           backgroundColor: aqiStatus.find((item) => {
-            return item.max >= data[stationArray[i].index].aqi;
-          }).color,
+            return item.max >= data[stationArray[i].index]?.aqi;
+          })?.color,
         },
       ],
     });
@@ -360,20 +364,20 @@ export function stationList(stationArray,data) {
                               }
 */
 
-export function airSituation(
-  sitename,
-  aqi,
-  aqiColor,
-  status,
-  pollutant,
-  pm25,
-  pm10,
-  co,
-  no2,
-  so2,
-  o3,
-  publishtime
-) {
+export function airSituation({
+  sitename = '未取得',
+  aqi= '未取得',
+  aqiColor= '#808080',
+  status= '未取得',
+  pollutant= '未取得',
+  pm25= '未取得',
+  pm10= '未取得',
+  co= '未取得',
+  no2= '未取得',
+  so2= '未取得',
+  o3= '未取得',
+  publishtime= '未取得'
+}) {
   const template = {
     type: "flex",
     altText: `${aqiStatus.find(i => i.max>=aqi).emoji}目前【${sitename}】的空氣品質${status}，AQI為${aqi}`,
@@ -413,13 +417,13 @@ export function airSituation(
                     type: "text",
                     text: "AQI",
                     align: "center",
-                    size: "xl",
+                    size: "lg",
                   },
                   {
                     type: "text",
                     text: aqi,
                     align: "center",
-                    size: "xxl",
+                    size: "3xl",
                   },
                 ],
               },
@@ -436,7 +440,7 @@ export function airSituation(
           {
             type: "text",
             text: status,
-            margin: "md",
+            margin: "lg",
             size: "xl",
           },
         ],
@@ -641,8 +645,91 @@ export function airSituation(
       },
     },
   };
+
   return template;
 }
 
+
+
 //let [contents] = stationList.contents.hero.contents;
 //console.log(contents);
+export function warningTemplate(aqiStatus,handleText,) {
+ const template = {
+ "type": "flex",
+ "altText":`⚠️${
+  aqiStatus.find((i) => i.max >= handleText.aqi).emoji
+}目前【${handleText.sitename}】的空氣品質${
+  handleText.status
+}，AQI為${handleText.aqi}`,
+ "contents":{
+  "type": "bubble",
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": `⚠️追蹤結果【${handleText.sitename}】`,
+        "weight": "bold",
+        "size": "xl",
+        "wrap": true
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "margin": "lg",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "text",
+            "text": `${
+              aqiStatus.find((i) => i.max >= handleText.aqi).emoji
+            }目前【${handleText.sitename}】的空氣品質${
+              handleText.status
+            }，AQI為${handleText.aqi}`,
+            "wrap": true
+          }
+        ]
+      }
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "horizontal",
+    "spacing": "sm",
+    "contents": [
+      {
+        "type": "button",
+        "action": {
+          "type": "message",
+          "label": "暫停通知",
+          "text": `暫停通知${process.env.disableNotificationTime}小時`
+        },
+        "style": "primary",
+        "gravity": "center",
+        "margin": "md",
+        "color": "#4c5a6e"
+      },
+      {
+        "type": "button",
+        "action": {
+          "type": "message",
+          "label": "取消追蹤",
+          "text": "取消追蹤"
+        },
+        "style": "primary",
+        "gravity": "center",
+        "margin": "md",
+        "color": "#d64040"
+      }
+    ],
+    "flex": 0,
+    "paddingStart": "0px"
+  }
+}
+}
+
+return template
+
+}
+
