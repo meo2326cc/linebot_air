@@ -10,7 +10,7 @@ import {
   airSituation,
 } from "./outputTemplate.js";
 import { locationsSort1 } from "./locationsData.js";
-import bdActions from "./bdActions.js";
+import dbActions from "./dbActions.js";
 
 
 
@@ -40,7 +40,7 @@ getAirdata();
 
 async function updateData(){
 await new Promise(res => res(getAirdata()))
-bdActions.sendNotification(data);
+dbActions.sendNotification(data);
 }
 
 setInterval(updateData, process.env.updateInterval);
@@ -52,7 +52,7 @@ function trackingStation (data , event ,message){
     item => item.sitename == message.slice(2)
   );
   filterStation !== undefined
-    ? bdActions.insertData(filterStation, event)
+    ? dbActions.insertData(filterStation, event)
     : client.replyMessage(event.replyToken, {
         type: "text",
         text: "查無該測站，無法追蹤",
@@ -77,9 +77,9 @@ function handleEvent(event) {
   } else if (message === "測站清單") {
     return client.replyMessage(event.replyToken, locationsList);
   } else if (message === "取消追蹤"){
-    bdActions.deleteData(event)
+    dbActions.deleteData(event)
   } else if (message === "暫停通知"){
-    bdActions.disableNotification(event)
+    dbActions.disableNotification(event)
   } else if (message.indexOf("追蹤") === 0) {
     trackingStation(data , event , message)
   } else { //xx站點清單

@@ -67,36 +67,23 @@ export default {
       const hasSavedlist = await this.mongodbConnect
         .distinct("station");
       hasSavedlist.forEach((item) => {
-        //
-        console.log('70行：'+ hasSavedlist )
-        //
         const handleText = data.find((item2) => item2.sitename === item);
-        //
-        console.log(`${handleText.aqi }  &  ${this.aqiReport}` )
-        //是就執行，否就跳至null
-        //
+
         if(Number(handleText.aqi) >= this.aqiReport) {
           (async () => {
             try{
               const res = await this.mongodbConnect
                 .find({ station: item }).toArray();
-                //
-                console.log(res)
-                //
               const userIds = res.filter((item2) => {
               return item2?.disableTime < Date.now() || item2?.disableTime === undefined
             }).map(item2 => item2.userId );
-              //
               client.multicast(userIds, [
                 warningTemplate(aqiStatus,handleText)
               ]);
             }catch(err){
               console.log(' line端 傳送通知遇到錯誤 ' + err )
             }
-
-            })()
-        }else{
-          console.log(item+'通知未發送');
+          })()
         }
       });
     } catch (error) {
